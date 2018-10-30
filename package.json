@@ -1,0 +1,17 @@
+{
+  "name": "seo-audit-tool",
+  "version": "1.0.0",
+  "description": "SEO audit tool",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jakub Drobnik <drobnik.j@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "apify": "^0.8.16",
+    "microdata-node": "^1.0.0",
+    "request-promise": "^4.2.2"
+  }
+}
