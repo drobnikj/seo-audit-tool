@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "apify": "^0.8.16",
+    "bluebird": "^3.5.2",
     "microdata-node": "^1.0.0",
+    "node-fetch": "^2.2.0",
     "request-promise": "^4.2.2"
   }
 }

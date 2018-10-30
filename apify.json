@@ -1,11 +1,11 @@
 {
 	"name": "seo-audit-tool",
-	"actId": null,
+	"actId": "drobnikj/seo-audit-tool",
 	"version": {
 		"versionNumber": "0.1",
 		"buildTag": "latest",
 		"envVars": [],
 		"sourceType": "TARBALL",
-		"tarballUrl": null
+		"tarballUrl": "https://api.apify.com/v2/key-value-stores/6XZutKX8JEQnXctEF/records/seo-audit-tool-0.1.zip?disableRedirect=true"
 	}
 }

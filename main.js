@@ -1,14 +1,15 @@
 const Apify = require('apify');
 const { URL } = require('url');
+
 const { PseudoUrl } = Apify;
 const { enqueueLinks, injectJQuery } = Apify.utils.puppeteer;
 
-const { $basicSEO } = require('./seo.js');
+const { basicSEO } = require('./seo.js');
 const { jsonLdLookup, microdataLookup } = require('./ontology_lookups.js');
 
 Apify.main(async () => {
     const { startUrl, maxConcurrency } = await Apify.getValue('INPUT');
-    console.log(`SEO audit for ${startUrl} started.`);
+    console.log(`SEO audit for ${startUrl} started`);
 
     // Get web hostname
     // TODO: second vs third lvl domain
@@ -18,7 +19,6 @@ Apify.main(async () => {
     console.log(`Web host name: ${hostname}`);
 
     const requestQueue = await Apify.openRequestQueue();
-
     await requestQueue.addRequest({ url: startUrl });
 
     const crawler = new Apify.PuppeteerCrawler({
@@ -32,9 +32,7 @@ Apify.main(async () => {
         handlePageFunction: async ({ request, page }) => {
             console.log(`Start processing ${request.url}`);
 
-            await injectJQuery(page);
-
-            //TODO: Check redirect
+            // TODO: Check redirect
 
             const data = {
                 url: page.url(),
@@ -42,7 +40,8 @@ Apify.main(async () => {
                 isLoaded: true,
             };
 
-            data.basicSEO = await page.evaluate($basicSEO);
+            const SEO = await basicSEO(page);
+            Object.assign(data, SEO);
             data.jsonLd = await jsonLdLookup(page);
             data.microdata = await microdataLookup(page);
 
@@ -50,7 +49,7 @@ Apify.main(async () => {
 
             // Enqueue links
             const enqueueResults = await enqueueLinks(page, 'a[href]', [pseudoUrl], requestQueue);
-            const newRequests = enqueueResults.filter(result => (!result.wasAlreadyPresent));
+            const newRequests = enqueueResults.filter((result) => (!result.wasAlreadyPresent));
             if (newRequests.length) console.log(`${request.url}: Added ${newRequests.length} urls to queue.`);
 
             console.log(`${request.url}: Finished`);

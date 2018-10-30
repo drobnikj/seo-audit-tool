@@ -1,21 +1,25 @@
 {
-  "title": "SEO audit tool input",
-  "type": "object",
-  "schemaVersion": 1,
-  "properties": {
-    "startUrl": {
-      "title": "Web URL",
-      "type": "string",
-      "description": "URL of webpage, where we run SEO audit",
-      "prefill": "https://apify.com"
+    "title": "SEO audit tool input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "startUrl": {
+            "title": "Web URL",
+            "type": "string",
+            "description": "URL of webpage, where we run SEO audit",
+            "prefill": "https://apify.com",
+            "editor": "textfield"
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "",
+            "default": 1,
+            "maximum": 100
+        }
     },
-    "maxConcurrency": {
-      "title": "Max Concurrency",
-      "type": "number",
-      "description": "Maximum concurrent open pages",
-      "default": "10",
-      "prefill": "10"
-    }
-  },
-  "required": ["startUrl", "maxConcurrency"]
+    "required": [
+        "startUrl",
+        "maxConcurrency"
+    ]
 }
