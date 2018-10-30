@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+- "8"
+before_script:
+- npm install apify-cli -g
+- apify login --token $APIFY_TOKEN
+script:
+# run on each commit
+#  - npm test
+deploy:
+# deploy develop as beta tag act
+- provider: script
+  script: apify push --build-tag beta
+  on:
+    branch: develop
+# deploy master as latest tag act
+- provider: script
+  script: apify push --build-tag latest
+  on:
+    branch: master
