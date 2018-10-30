@@ -30,7 +30,7 @@ Apify.main(async () => {
         gotoFunction: ({ request, page }) => page.goto(request.url, { waitUntil: 'networkidle2' }),
 
         handlePageFunction: async ({ request, page }) => {
-            console.log(`${request.url}: Start processing..`);
+            console.log(`Start processing ${request.url}`);
 
             await injectJQuery(page);
 
