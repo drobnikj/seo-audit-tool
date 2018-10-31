@@ -30,7 +30,7 @@ async function basicSEO(page, userParams = {}) {
         result.isMetaDescription = !!($('meta[name=description]').length);
         if (result.isMetaDescription) {
             result.metaDescription = $('meta[name=description]').attr('content');
-            result.isMetaDescriptionLong = (result.metaDescription.length > params.maxMetaDescriptionLength);
+            result.isMetaDescriptionEnoughLong = (result.metaDescription.length < params.maxMetaDescriptionLength);
         }
         // --  Doctype
         result.isDoctype = !!(document.doctype);
@@ -39,20 +39,19 @@ async function basicSEO(page, userParams = {}) {
             result.isTitle = true;
             result.title = $('title').text();
             const titleLength = result.title.length;
-            result.isTitleLong = (titleLength > params.maxTitleLength);
-            result.isTitleShort = (titleLength < params.minTitleLength);
+            result.isTitleEnoughLong = (titleLength <= params.maxTitleLength) && (titleLength >= params.minTitleLength);
         } else result.isTitle = false;
         // -- h1
         const h1Count = $('h1').length;
         result.isH1 = (h1Count > 0);
         if (result.isH1) result.h1 = $('h1').text();
-        result.isH1Multiple = (h1Count > 1);
+        result.isH1OnlyOne = (h1Count === 1);
         // -- h2
         result.isH2 = !!($('h2').length);
         // -- Links
         const $allLinks = $('a');
         result.linksCount = $allLinks.length;
-        result.isTooMuchlinks = (result.linksCount > params.maxLinksCount);
+        result.isTooEnoughLinks = (result.linksCount < params.maxLinksCount);
         result.internalNoFollowLinks = [];
         $allLinks.each(function () {
             if ($(this).attr('rel') === 'nofollow'
@@ -77,16 +76,16 @@ async function basicSEO(page, userParams = {}) {
             result.imageUrls.push(this.src);
             if (!$(this).attr('alt')) result.notOptimizedImgs.push(this.src);
         });
-        result.notOptimizedImgsCount = result.notOptimizedImgs.length;
+        result.notOptimizedImagesCount = result.notOptimizedImgs.length;
         // -- words count
         result.wordsCount = $('body').text().match(/\S+/g).length;
-        result.isContentTooLong = (result.wordsCount > params.maxWordsCount);
+        result.isContentEnoughLong = (result.wordsCount < params.maxWordsCount);
         // -- viewport
         result.isViewport = !!($('meta[name=viewport]'));
         // -- amp version if page
         result.isAmp = !!($('html[⚡]') || $('html[amp]'));
         // -- iframe check
-        result.isIframe = !!($('iframe').length);
+        result.isNotIframe = !($('iframe').length);
 
         return result;
     }, params);

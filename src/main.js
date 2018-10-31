@@ -2,17 +2,21 @@ const Apify = require('apify');
 const { URL } = require('url');
 
 const { PseudoUrl } = Apify;
-const { enqueueLinks, injectJQuery } = Apify.utils.puppeteer;
+const { enqueueLinks } = Apify.utils.puppeteer;
 
 const { basicSEO } = require('./seo.js');
 const { jsonLdLookup, microdataLookup } = require('./ontology_lookups.js');
+const { generateReport } = require('./templating.js');
 
 Apify.main(async () => {
     const { startUrl, maxConcurrency } = await Apify.getValue('INPUT');
     console.log(`SEO audit for ${startUrl} started`);
 
+    await Apify.setValue('TEST', html, { contentType: 'text/html' });
+
+    return;
+
     // Get web hostname
-    // TODO: second vs third lvl domain
     const { hostname } = new URL(startUrl);
     const pseudoUrl = new PseudoUrl(`[http|https]://[.*]${hostname}[.*]`);
 
@@ -25,14 +29,11 @@ Apify.main(async () => {
         requestQueue,
         maxConcurrency,
 
-        // TODO: Proxies
-        // launchPuppeteerOptions: { headless: true },
+        launchPuppeteerOptions: { useApifyProxy: true },
         gotoFunction: ({ request, page }) => page.goto(request.url, { waitUntil: 'networkidle2' }),
 
         handlePageFunction: async ({ request, page }) => {
             console.log(`Start processing ${request.url}`);
-
-            // TODO: Check redirect
 
             const data = {
                 url: page.url(),
