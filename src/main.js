@@ -12,10 +12,6 @@ Apify.main(async () => {
     const { startUrl, maxConcurrency } = await Apify.getValue('INPUT');
     console.log(`SEO audit for ${startUrl} started`);
 
-    await Apify.setValue('TEST', html, { contentType: 'text/html' });
-
-    return;
-
     // Get web hostname
     const { hostname } = new URL(startUrl);
     const pseudoUrl = new PseudoUrl(`[http|https]://[.*]${hostname}[.*]`);
