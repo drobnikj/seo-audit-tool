@@ -6,7 +6,7 @@ const { enqueueLinks } = Apify.utils.puppeteer;
 
 const { basicSEO } = require('./seo.js');
 const { jsonLdLookup, microdataLookup } = require('./ontology_lookups.js');
-const { generateReport } = require('./templating.js');
+// const { generateReport } = require('./templating.js');
 
 Apify.main(async () => {
     const { startUrl, maxConcurrency } = await Apify.getValue('INPUT');
