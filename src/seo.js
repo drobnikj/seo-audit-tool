@@ -71,12 +71,12 @@ async function basicSEO(page, userParams = {}) {
             .toArray();
         // -- images
         result.imageUrls = [];
-        result.notOptimizedImgs = [];
+        result.notOptimizedImages = [];
         $('img').each(function () {
             result.imageUrls.push(this.src);
-            if (!$(this).attr('alt')) result.notOptimizedImgs.push(this.src);
+            if (!$(this).attr('alt')) result.notOptimizedImages.push(this.src);
         });
-        result.notOptimizedImagesCount = result.notOptimizedImgs.length;
+        result.notOptimizedImagesCount = result.notOptimizedImages.length;
         // -- words count
         result.wordsCount = $('body').text().match(/\S+/g).length;
         result.isContentEnoughLong = (result.wordsCount < params.maxWordsCount);

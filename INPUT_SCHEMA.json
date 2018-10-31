@@ -4,22 +4,14 @@
     "schemaVersion": 1,
     "properties": {
         "startUrl": {
-            "title": "Web URL",
+            "title": "Web URL, where we start SEO audit.",
             "type": "string",
             "description": "URL of webpage, where we run SEO audit",
             "prefill": "https://apify.com",
             "editor": "textfield"
-        },
-        "maxConcurrency": {
-            "title": "Max concurrency",
-            "type": "integer",
-            "description": "",
-            "default": 1,
-            "maximum": 100
         }
     },
     "required": [
-        "startUrl",
-        "maxConcurrency"
+        "startUrl"
     ]
 }

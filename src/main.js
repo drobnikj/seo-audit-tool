@@ -9,7 +9,7 @@ const { jsonLdLookup, microdataLookup } = require('./ontology_lookups.js');
 // const { generateReport } = require('./templating.js');
 
 Apify.main(async () => {
-    const { startUrl, maxConcurrency } = await Apify.getValue('INPUT');
+    const { startUrl } = await Apify.getValue('INPUT');
     console.log(`SEO audit for ${startUrl} started`);
 
     // Get web hostname
@@ -23,7 +23,6 @@ Apify.main(async () => {
 
     const crawler = new Apify.PuppeteerCrawler({
         requestQueue,
-        maxConcurrency,
 
         launchPuppeteerOptions: { useApifyProxy: true },
         gotoFunction: ({ request, page }) => page.goto(request.url, { waitUntil: 'networkidle2' }),
