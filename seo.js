@@ -88,56 +88,6 @@ async function basicSEO(page, userParams = {}) {
         // -- iframe check
         result.isIframe = !!($('iframe').length);
 
-        // TODO: Check broken links and images
-        /*
-        // -- check broken links
-    context.willFinishLater();
-    var promises = [];
-    result.brokenLinks = {
-    internal: [],
-    external: []
-    };
-    $('a').each(function() {
-    var self = this;
-    // skips mailto and JS href
-    if (self.href.indexOf('javascript:') === -1 && self.href.indexOf('mailto:') === -1) {
-        var p = $.get(self.href)
-        .done(function(data) {
-            // good link
-        })
-        .fail(function( jqXHR, textStatus, errorThrown ){
-            if (errorThrown.name === 'SecurityError') {
-                // need to fix this error, page blocked jquery requests
-                // FIX: We can do requests from other page
-            }
-            // broken link
-            if (window.location.hostname == self.hostname) result.brokenLinks.internal.push(self.href);
-            else result.brokenLinks.external.push(self.href);
-        });
-        promises.push(p);
-    }
-    });
-    // -- check broken images
-    result.brokenImgs = {
-    internal: [],
-    external: []
-    };
-    $('a').each(function() {
-    var self = this;
-    var p = $.get(self.src, function() {
-        // good image
-    })
-    .fail(function() {
-        // broken image
-        if (self.src.split('?')[0].indexOf(window.location.hostname) > -1)
-            result.brokenImgs.internal.push(self.href);
-        else
-            result.brokenImgs.external.push(self.href);
-    });
-    promises.push(p);
-    });
-         */
-
         return result;
     }, params);
 
