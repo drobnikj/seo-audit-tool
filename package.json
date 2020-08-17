@@ -1,6 +1,6 @@
 {
   "name": "seo-audit-tool",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "SEO audit tool",
   "main": "main.js",
   "scripts": {
@@ -10,12 +10,16 @@
   "author": "Jakub Drobnik <drobnik.j@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "apify": "^0.8.16",
-    "bluebird": "^3.5.2",
-    "express": "^4.16.4",
-    "handlebars": "^4.0.12",
-    "microdata-node": "^1.0.0",
-    "node-fetch": "^2.2.0",
-    "request-promise": "^4.2.2"
+    "apify": "^0.21.3",
+    "bluebird": "^3.7.2",
+    "express": "^4.17.1",
+    "handlebars": "^4.7.6",
+    "microdata-node": "^2.0.0"
+  },
+  "devDependencies": {
+    "@apify/eslint-config": "0.1.0",
+    "eslint": "^7.0.0",
+    "@types/jquery": "^3.5.1",
+    "@types/bluebird": "^3.5.32"
   }
 }

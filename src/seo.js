@@ -1,6 +1,5 @@
 const Apify = require('apify');
-const fetch = require('node-fetch');
-const Promise = require('bluebird');
+const Bluebird = require('bluebird');
 
 const { injectJQuery } = Apify.utils.puppeteer;
 
@@ -10,12 +9,41 @@ const DEFAULT_SEO_PARAMS = {
     maxMetaDescriptionLength: 140,
     maxLinksCount: 3000,
     maxWordsCount: 350,
+    outputLinks: false,
+    workingStatusCodes: [200, 301, 302, 304],
 };
 
+/**
+ * @param {Puppeteer.Page} page
+ * @param {any} userParams
+ */
 async function basicSEO(page, userParams = {}) {
     await injectJQuery(page);
-    const params = Object.assign(DEFAULT_SEO_PARAMS, userParams);
-    const basicSEO = await page.evaluate(async (params) => {
+    const seoParams = {
+        ...DEFAULT_SEO_PARAMS,
+        ...userParams,
+    };
+    const { origin } = new URL(page.url());
+
+    const fetchInBrowser = (url) => page.evaluate(async (pUrl) => {
+        try {
+            const { status } = await window.fetch(pUrl, {
+                method: 'GET',
+                mode: 'no-cors',
+                headers: {
+                    Accept: '*/*',
+                },
+                referrerPolicy: 'no-referrer',
+            });
+
+            return status;
+        } catch (e) {
+            return 500;
+        }
+    }, url);
+
+    const seo = await page.evaluate(async (params) => {
+        const $ = window.jQuery;
         const result = {};
         // Check flash content
         if ($('script:contains(embedSWF)').length) result.isUsingFlash = true;
@@ -55,19 +83,29 @@ async function basicSEO(page, userParams = {}) {
         result.internalNoFollowLinks = [];
         $allLinks.each(function () {
             if ($(this).attr('rel') === 'nofollow'
-                && this.href.indexOf(window.location.hostname) > -1) {
+                && this.href.includes(window.location.hostname)) {
                 result.internalNoFollowLinks.push(this.href);
             }
         });
         result.internalNoFollowLinksCount = result.internalNoFollowLinks.length;
         // Check broken links
         result.linkUrls = $allLinks
-            .filter(function () {
-                const href = $(this).attr('href');
-                return href && !href.includes('javascript:') && !href.includes('mailto:');
-            }).map(function () {
-                return this.href;
-            })
+            .filter((index, el) => {
+                const href = $(el).attr('href');
+                return href
+                    && !href.includes('javascript:')
+                    && !href.includes('mailto:');
+            }).map((index, el) => el.href)
+            .toArray();
+        result.internalLinks = $allLinks.filter((index, el) => {
+            const $el = $(el);
+            const href = $el.attr('href');
+            return $el.is('a[href]:not([target="_blank"]),a[href]:not([rel*="nofollow"]),a[href]:not([rel*="noreferrer"])')
+                && href.includes(window.location.hostname)
+                && !href.includes('javascript:')
+                && !href.includes('mailto:');
+        })
+            .map((index, el) => el.href)
             .toArray();
         // -- images
         result.imageUrls = [];
@@ -78,7 +116,7 @@ async function basicSEO(page, userParams = {}) {
         });
         result.notOptimizedImagesCount = result.notOptimizedImages.length;
         // -- words count
-        result.wordsCount = $('body').text().match(/\S+/g).length;
+        result.wordsCount = document.body.innerText.split(/\b(\p{Letter}+)\b/gu).filter((s) => s).length;
         result.isContentEnoughLong = (result.wordsCount < params.maxWordsCount);
         // -- viewport
         result.isViewport = !!($('meta[name=viewport]'));
@@ -86,31 +124,71 @@ async function basicSEO(page, userParams = {}) {
         result.isAmp = !!($('html[⚡]') || $('html[amp]'));
         // -- iframe check
         result.isNotIframe = !($('iframe').length);
+        result.pageIsBlocked = $('meta[name=robots][content]')
+            .filter((index, s) => ['noindex', 'nofollow'].some((x) => s.content.includes(x)))
+            .length > 0;
 
         return result;
-    }, params);
+    }, seoParams);
+
+    const { workingStatusCodes } = seoParams;
+
+    seo.robotsFileExists = workingStatusCodes.includes(await fetchInBrowser(`${origin}/robots.txt`));
+    seo.faviconExists = workingStatusCodes.includes(await fetchInBrowser(`${origin}/favicon.ico`));
 
     // Check broken links
-    basicSEO.brokenLinks = [];
-    await Promise.map(basicSEO.linkUrls, (url) => {
-        return fetch(url).then((res) => {
-            if (res.status !== 200) basicSEO.brokenLinks.push(url);
-        }).catch(() => basicSEO.brokenLinks.push(url));
-    });
-    basicSEO.brokenLinksCount = basicSEO.brokenLinks.length;
-    delete basicSEO.linkUrls;
+    const internalBrokenLinks = new Set();
+    const allBrokenLinks = new Set();
+    await Bluebird.map(seo.internalLinks, (url) => {
+        if (internalBrokenLinks.has(url)) {
+            return;
+        }
+
+        return fetchInBrowser(url).then((res) => {
+            if (!workingStatusCodes.includes(res)) {
+                internalBrokenLinks.add(url);
+            }
+        });
+    }, { concurrency: 2 });
+    seo.brokenLinksCount = internalBrokenLinks.size;
+
+    if (!seoParams.outputLinks) {
+        delete seo.internalLinks;
+    }
+
+    seo.brokenLinks = [...internalBrokenLinks];
+
+    await Bluebird.map(seo.linkUrls, (url) => {
+        if (internalBrokenLinks.has(url) || allBrokenLinks.has(url)) {
+            return;
+        }
+
+        return fetchInBrowser(url).then((res) => {
+            if (!workingStatusCodes.includes(res)) {
+                allBrokenLinks.add(url);
+            }
+        });
+    }, { concurrency: 2 });
+    seo.externalBrokenLinksCount = allBrokenLinks.size;
+    seo.externalBrokenLinks = [...allBrokenLinks];
+
+    if (!seoParams.linkUrls) {
+        delete seo.linkUrls;
+    }
 
     // Check broken images
-    basicSEO.brokenImages = [];
-    await Promise.map(basicSEO.imageUrls, (imageUrl) => {
-        return fetch(imageUrl).then((res) => {
-            if (res.status !== 200) basicSEO.brokenImages.push(imageUrl);
-        }).catch(() => basicSEO.brokenImages.push(imageUrl));
-    });
-    basicSEO.brokenImagesCount = basicSEO.brokenImages.length;
-    delete basicSEO.imageUrls;
+    seo.brokenImages = [];
+    await Bluebird.map(seo.imageUrls, (imageUrl) => {
+        return fetchInBrowser(imageUrl).then((res) => {
+            if (!workingStatusCodes.includes(res)) {
+                seo.brokenImages.push(imageUrl);
+            }
+        });
+    }, { concurrency: 2 });
+    seo.brokenImagesCount = seo.brokenImages.length;
+    delete seo.imageUrls;
 
-    return basicSEO;
+    return seo;
 }
 
 module.exports = {

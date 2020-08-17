@@ -7,11 +7,97 @@
             "title": "Web URL, where we start SEO audit.",
             "type": "string",
             "description": "URL of webpage, where we run SEO audit",
+            "example": "https://apify.com",
             "prefill": "https://apify.com",
             "editor": "textfield"
+        },
+        "proxy": {
+            "title": "Proxy configuration",
+            "description": "Use proxies to access the given website",
+            "type": "object",
+            "prefill": {
+                "useApifyProxy": true
+            },
+            "editor": "proxy"
+        },
+        "maxRequestsPerCrawl": {
+            "title": "Max pages",
+            "description": "Maximum number of pages to visit. Defaults to unlimited pages",
+            "example": 100,
+            "type": "integer",
+            "editor": "number"
+        },
+        "maxDepth": {
+            "title": "Max depth",
+            "description": "Max depth to crawl. Defaults to unlimited depth",
+            "example": 2,
+            "type": "integer",
+            "editor": "number"
+        },
+        "userAgent": {
+            "title": "User Agent",
+            "description": "Provide a manual User-Agent to test against mobile and desktop browsers",
+            "example": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+            "default": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+            "type": "string",
+            "editor": "textfield",
+            "sectionCaption": "Experimental features",
+            "sectionDescription": "Features in this section are highly experimental."
+        },
+        "viewPortWidth": {
+            "title": "Viewport width",
+            "description": "Change the viewport width to trigger responsive breakpoints",
+            "example": 1440,
+            "type": "integer",
+            "editor": "number"
+        },
+        "viewPortHeight": {
+            "title": "Viewport height",
+            "description": "Change the viewport height to trigger responsive breakpoints",
+            "example": 900,
+            "type": "integer",
+            "editor": "number"
+        },
+        "pageTimeout": {
+            "title": "Page Navigation timeout",
+            "description": "Change the page navigation timeout, in milliseconds",
+            "example": 30000,
+            "type": "integer",
+            "editor": "number"
+        },
+        "maxRequestRetries": {
+            "title": "Max Request Retries",
+            "description": "How many retries before considering a failure",
+            "example": 2,
+            "type": "integer",
+            "editor": "number"
+        },
+        "handlePageTimeoutSecs": {
+            "title": "Requests timeout",
+            "description": "Number in seconds for how long each page should wait for processing",
+            "default": 3600,
+            "example": 2,
+            "type": "integer",
+            "editor": "number"
+        },
+        "seoParams": {
+            "title": "SEO params",
+            "description": "Override the internal SEO params",
+            "example": {
+                "maxTitleLength": 70,
+                "minTitleLength": 10,
+                "maxMetaDescriptionLength": 140,
+                "maxLinksCount": 3000,
+                "maxWordsCount": 350,
+                "outputLinks": false,
+                "workingStatusCodes": [200, 301, 302, 304]
+            },
+            "type": "object",
+            "editor": "json"
         }
     },
     "required": [
-        "startUrl"
+        "startUrl",
+        "proxy"
     ]
 }
