@@ -24,6 +24,7 @@
             "title": "Max pages",
             "description": "Maximum number of pages to visit. Defaults to unlimited pages",
             "example": 100,
+            "prefill": 10,
             "type": "integer",
             "editor": "number"
         },
