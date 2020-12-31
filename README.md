@@ -19,7 +19,7 @@ All results are stored in Apify datasets. Each result has the following attribut
 - isGoogleAnalyticsFunc - check if Google Analytics function is included in the page
 - isCharacterEncode - check if page has meta tag with charset attribute
 - isMetaDescription - check if page has meta description
-metaDescription - value from meta description
+- metaDescription - value from meta description
 - isMetaDescriptionEnoughLong - check if length of meta description is long enough
 - isDoctype - check if doctype is included in page
 - isTitle - check if title element is included in page
