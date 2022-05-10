@@ -1,0 +1,110 @@
+{
+    "actorSpecification": 1,
+    "name": "seo-audit-tool",
+    "title": "SEO Audit Tool",
+    "description": "Audits SEO on your webpage",
+    "version": "0.0.1",
+    "storages": {
+        "dataset": {
+            "actorSpecification": 1,
+            "title": "SEO audit tool",
+            "description": "Too see all scraped properties, export the whole dataset or select All fields instead of Overview",
+            "views": {
+                "overview": {
+                    "title": "Overview",
+                    "description": "",
+                    "transformation": {
+                        "fields": [
+                            "url",
+                            "title",
+                            "isLoaded",
+                            "isGoogleAnalyticsObject",
+                            "metaDescription",
+                            "isMetaDescriptionEnoughLong",
+                            "isTitleEnoughLong",
+                            "isH1",
+                            "h1",
+                            "isH1OnlyOne",
+                            "linksCount",
+                            "notOptimizedImagesCount",
+                            "wordsCount",
+                            "robotsFileExists",
+                            "faviconExists",
+                            "brokenLinksCount"
+]
+ 
+                    },
+                    "display": {
+                        "component": "table",
+                        "columns": [
+
+                            { "label": "url",
+                                "format": "text",
+                                "field": "url"
+                            },
+                            { "label": "title",
+                                "format": "text",
+                                "field": "title"
+                            },
+                            { "label": "isLoaded",
+                                "format": "text",
+                                "field": "isLoaded"
+                            },
+                            { "label": "isGoogleAnalyticsObject",
+                                "format": "text",
+                                "field": "isGoogleAnalyticsObject"
+                            },
+                            { "label": "metaDescription",
+                                "format": "text",
+                                "field": "metaDescription"
+                            },
+                            { "label": "isMetaDescriptionEnoughLong",
+                                "format": "text",
+                                "field": "isMetaDescriptionEnoughLong"
+                            },
+                            { "label": "isTitleEnoughLong",
+                                "format": "text",
+                                "field": "isTitleEnoughLong"
+                            },
+                            { "label": "isH1",
+                                "format": "text",
+                                "field": "isH1"
+                            },
+                            { "label": "h1",
+                                "format": "text",
+                                "field": "h1"
+                            },
+                            { "label": "isH1OnlyOne",
+                                "format": "text",
+                                "field": "isH1OnlyOne"
+                            },
+                            { "label": "linksCount",
+                                "format": "text",
+                                "field": "linksCount"
+                            },
+                            { "label": "notOptimizedImagesCount",
+                                "format": "text",
+                                "field": "notOptimizedImagesCount"
+                            },
+                            { "label": "wordsCount",
+                                "format": "text",
+                                "field": "wordsCount"
+                            },
+                            { "label": "robotsFileExists",
+                                "format": "text",
+                                "field": "robotsFileExists"
+                            },
+                            { "label": "faviconExists",
+                                "format": "text",
+                                "field": "faviconExists"
+                            },
+                            { "label": "brokenLinksCount",
+                                "format": "text",
+                                "field": "brokenLinksCount"
+                            }                        ]
+                    }
+                }
+            }
+        }
+    }
+}
