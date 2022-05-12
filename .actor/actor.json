@@ -39,7 +39,7 @@
                         "columns": [
 
                             { "label": "url",
-                                "format": "text",
+                                "format": "link",
                                 "field": "url"
                             },
                             { "label": "title",
@@ -47,11 +47,11 @@
                                 "field": "title"
                             },
                             { "label": "isLoaded",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "isLoaded"
                             },
                             { "label": "isGoogleAnalyticsObject",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "isGoogleAnalyticsObject"
                             },
                             { "label": "metaDescription",
@@ -59,15 +59,15 @@
                                 "field": "metaDescription"
                             },
                             { "label": "isMetaDescriptionEnoughLong",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "isMetaDescriptionEnoughLong"
                             },
                             { "label": "isTitleEnoughLong",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "isTitleEnoughLong"
                             },
                             { "label": "isH1",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "isH1"
                             },
                             { "label": "h1",
@@ -75,33 +75,34 @@
                                 "field": "h1"
                             },
                             { "label": "isH1OnlyOne",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "isH1OnlyOne"
                             },
                             { "label": "linksCount",
-                                "format": "text",
+                                "format": "number",
                                 "field": "linksCount"
                             },
                             { "label": "notOptimizedImagesCount",
-                                "format": "text",
+                                "format": "number",
                                 "field": "notOptimizedImagesCount"
                             },
                             { "label": "wordsCount",
-                                "format": "text",
+                                "format": "number",
                                 "field": "wordsCount"
                             },
                             { "label": "robotsFileExists",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "robotsFileExists"
                             },
                             { "label": "faviconExists",
-                                "format": "text",
+                                "format": "boolean",
                                 "field": "faviconExists"
                             },
                             { "label": "brokenLinksCount",
-                                "format": "text",
+                                "format": "number",
                                 "field": "brokenLinksCount"
-                            }                        ]
+                            }
+                        ]
                     }
                 }
             }
